@@ -3,6 +3,7 @@
 // pages/index.js or app/page.js (depending on your Next.js version)
 import { useState, useEffect } from "react";
 import Head from "next/head";
+import { getBalance } from "./actions";
 
 export default function BTCHackMessenger() {
   const [messages, setMessages] = useState([]);
@@ -115,6 +116,14 @@ export default function BTCHackMessenger() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    async function fetchData() {
+      const res = await getBalance();
+      setUserBalance(`${res.onChainBalance?.chain_balance}`);
+    }
+    fetchData();
+  });
+
   return (
     <>
       <Head>
@@ -159,8 +168,8 @@ export default function BTCHackMessenger() {
               <h3 className="font-semibold mb-2 text-sm">Règles du chat</h3>
               <ul className="text-xs space-y-1 ml-4 list-disc">
                 <li>
-                  Messages interdits entre 2h et 5h du matin → pénalité
-                  automatique.
+                  Que des messages parlant de developpement lightning et de
+                  bitcoin
                 </li>
                 <li>Spam (même message plusieurs fois) → pénalité.</li>
                 <li>Mots interdits (violence, injures) → pénalité.</li>
@@ -170,6 +179,7 @@ export default function BTCHackMessenger() {
                 <li>
                   Limite de messages par heure (10 max) → au-delà = pénalité.
                 </li>
+                <li>Pas de message d'investissement</li>
               </ul>
             </div>
             {/* Zone messages façon WhatsApp */}
